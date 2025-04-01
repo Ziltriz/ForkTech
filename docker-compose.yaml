@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_forktech
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/alembic:/docker-entrypoint-initdb.d 
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build: 
+      context: ./backend
+      target: development  
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+    container_name: trx_service
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - ./backend:/app  
+      - ./backend/alembic/versions:/app/alembic/versions  
+    depends_on:
+      db:
+        condition: service_healthy
+    command: > 
+      uvicorn app.main:app --host 0.0.0.0 --port ${APP_PORT} --reload
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  web:
