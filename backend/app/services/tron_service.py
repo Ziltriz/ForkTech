@@ -1,13 +1,19 @@
 from tronpy import Tron
 from tronpy.providers import HTTPProvider
-from app.core.config import settings
+from decimal import Decimal
 from app.schemas.tron_schems import TronAddressInfo
+from app.core.config import settings
 
 
 
 class TronService:
     def __init__(self):
-        self.client = Tron(HTTPProvider(settings.TRON_NETWORK))
+        self.client = Tron(
+            HTTPProvider(
+                endpoint_uri=settings.TRON_NETWORK,
+                api_key=settings.TRON_API_KEY
+            )
+        )
 
     async def get_address_info(self, address: str) -> TronAddressInfo:
         account = self.client.get_account(address)
@@ -17,5 +23,5 @@ class TronService:
             address=address,
             bandwidth=account.get("free_net_usage", 0),
             energy=account.get("energy", 0),
-            balance=balance
+            balance=Decimal(balance)
         )

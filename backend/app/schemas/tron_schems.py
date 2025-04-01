@@ -1,5 +1,5 @@
-from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, field_validator
+from decimal import Decimal
 
 class TronAddressInfo(BaseModel):
     address: str
@@ -7,18 +7,26 @@ class TronAddressInfo(BaseModel):
     energy: int
     balance: int
     
-    class Config:
-        orm_mode = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class AddressQueryCreate(TronAddressInfo):
     pass
 
 class AddressQueryOut(AddressQueryCreate):
     id: int
-    created_at: datetime
+    address: str
+    bandwidth: int
+    energy: int
+    balance: Decimal  
     
-    class Config:
-        orm_mode = True
+    @field_validator('balance', mode='before')
+    def convert_balance(cls, v):
+        if isinstance(v, Decimal):
+            return int(v)
+        return v
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class PaginatedResponse(BaseModel):
     total: int

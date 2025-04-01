@@ -63,7 +63,8 @@ class Settings(BaseSettings):
     DB_HOST: str = ""
     DB_PORT: str = ""
     DB_NAME: str = ""
-    TRON_NETWORK: str = ""
+    TRON_URI: str = ""
+    TRON_API_KEY: str = ""
 
     @computed_field  # type: ignore[prop-decorator]
     @property
