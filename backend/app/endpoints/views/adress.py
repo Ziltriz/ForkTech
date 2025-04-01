@@ -5,7 +5,7 @@ from app.services.tron_service import TronService
 from app.services.database_service import DatabaseService
 from app.db.session import get_db
 
-router = APIRouter(prefix=['/address'], tags=['adress'])
+router = APIRouter(prefix='/address', tags=['adress'])
 
 @router.post("/info", response_model=AddressQueryOut)
 async def get_address_info(

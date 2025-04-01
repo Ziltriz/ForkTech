@@ -7,7 +7,7 @@ from app.schemas.tron_schems import TronAddressInfo
 
 class TronService:
     def __init__(self):
-        self.client = Tron(HTTPProvider(settings.tron_network))
+        self.client = Tron(HTTPProvider(settings.TRON_NETWORK))
 
     async def get_address_info(self, address: str) -> TronAddressInfo:
         account = self.client.get_account(address)
