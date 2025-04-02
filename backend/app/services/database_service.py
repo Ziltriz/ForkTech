@@ -4,6 +4,7 @@ from app.schemas.tron_schems import TronAddressInfo
 from sqlalchemy.future import select
 from sqlalchemy import desc
 
+
 class DatabaseService:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -24,11 +25,12 @@ class DatabaseService:
         offset = (page - 1) * per_page
         
         total_query = select(AddressQuery)
-        total = (await self.session.execute(total_query)).scalars().all()
-        total_count = len(total)
+        result = await self.session.execute(total_query)
+        total_count = len(result.scalars().all())
         
         queries = select(AddressQuery).order_by(desc(AddressQuery.created_at)).offset(offset).limit(per_page)
         result = await self.session.execute(queries)
         items = result.scalars().all()
         
         return total_count, items
+    

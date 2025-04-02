@@ -17,7 +17,12 @@ async def get_address_info(
     
     try:
         address_info = await tron_service.get_address_info(address)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    try:
         query = await db_service.create_address_query(address_info)
         return query
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+        

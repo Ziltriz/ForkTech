@@ -33,7 +33,7 @@ async def test_get_address_info(mock_balance, mock_account):
     
     tron_service = TronService()
     result = await tron_service.get_address_info("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t")
-    
+
     assert result.address == "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
     assert result.bandwidth == 1000
     assert result.energy == 500

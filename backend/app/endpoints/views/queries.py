@@ -6,7 +6,7 @@ from app.db.session import get_db
 
 router = APIRouter(prefix='/queries', tags=['queries'])
 
-@router.get('/', response_model=PaginatedResponse)
+@router.get('', response_model=PaginatedResponse)
 async def get_queries(
     page: int = 1,
     per_page: int = 10,

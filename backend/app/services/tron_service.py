@@ -10,7 +10,7 @@ class TronService:
     def __init__(self):
         self.client = Tron(
             HTTPProvider(
-                endpoint_uri=settings.TRON_NETWORK,
+                endpoint_uri=settings.TRON_URI,
                 api_key=settings.TRON_API_KEY
             )
         )
@@ -23,5 +23,5 @@ class TronService:
             address=address,
             bandwidth=account.get("free_net_usage", 0),
             energy=account.get("energy", 0),
-            balance=Decimal(balance)
+            balance=int(balance)
         )
